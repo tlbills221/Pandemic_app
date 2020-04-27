@@ -7,6 +7,7 @@ import cs505pubsubcep.Launcher;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -220,7 +221,7 @@ public class API {
       String responseString = "{}";
       try {
          Map<String,String> responseMap = new HashMap<>();
- 	 responseMap.put("getpatient", mrn);
+ 	 responseMap.put("getpatient", String.valueOf(mrn));
 	 responseString = gson.toJson(responseMap);
 	 //return the deleted file status
 
@@ -242,7 +243,7 @@ public class API {
       String responseString = "{}";
       try {
          Map<String,String> responseMap = new HashMap<>();
- 	 responseMap.put("gethospital", id);
+ 	 responseMap.put("gethospital", String.valueOf(id));
 	 responseString = gson.toJson(responseMap);
 	 //return the deleted file status
 
