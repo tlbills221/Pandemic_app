@@ -146,14 +146,8 @@ public class API {
       String responseString = "{}";
       try {
          Map<String,String> responseMap = new HashMap<>();
-	 String fileStr = "/mydb.db";
-	 File file = new File(fileStr);
- 	 responseMap.put("delete SQLite file at path", fileStr);
-	 if (file.delete())
-	 {
-		 responseMap.put("Deleted file", "yes");
-	 }
-	 else responseMap.put("Deleted file", "no");
+	 Launcher.dbEngine.initDB();
+ 	 responseMap.put("delete and recreate SQLite file at path", "mydb.db");
 	 responseString = gson.toJson(responseMap);
 	 //return the deleted file status
 

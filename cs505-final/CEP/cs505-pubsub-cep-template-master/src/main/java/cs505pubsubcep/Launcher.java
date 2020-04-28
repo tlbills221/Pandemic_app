@@ -59,6 +59,7 @@ public class Launcher {
 	System.out.println("Starting Database...");
         //Embedded database initialization - added by me
         dbEngine = new DBEngine();
+	dbEngine.initDB();
         System.out.println("Database Started...");
 
         //starting Collector

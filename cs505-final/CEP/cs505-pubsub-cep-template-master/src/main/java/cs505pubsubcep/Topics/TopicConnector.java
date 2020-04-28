@@ -28,10 +28,10 @@ public class TopicConnector {
 
         try {
 
-            String hostname = "";
-            String username = "";
-            String password = "";
-            String virtualhost = "";
+            String hostname = "128.163.202.61";
+            String username = "student";
+            String password = "student01";
+            String virtualhost = "patient_feed";
 
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(hostname);
@@ -55,7 +55,7 @@ public class TopicConnector {
                 System.out.println(" [x] Received Batch'" +
                         delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
 
-                List<Map<String,String>> incomingList = gson.fromJson(message, typeOf);
+                List<Map<String,String>> incomingList = gson.fromJson(message, typeOf); //This should control where the message is sent.
                 for(Map<String,String> map : incomingList) {
                     System.out.println("INPUT CEP EVENT: " +  map);
                     Launcher.cepEngine.input(Launcher.inputStreamName, gson.toJson(map));
