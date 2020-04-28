@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.lang.String;
+import java.lang.Integer;
 import java.util.Arrays;
 import org.apache.commons.lang3.ArrayUtils;
 public class DBEngine
@@ -49,10 +50,9 @@ public class DBEngine
       	statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
       	//statement.executeUpdate("drop table if exists person");
-      	statement.executeUpdate("create table patient (first_name string, last_name string, mrn string, zipcode integer, patient_status_code integer)"); //if we want to speed this up we do not need to store the patent name zipcode or patient_status_code as those are never asked for all we need is the location_code and the mrn
+      	statement.executeUpdate("create table patient (first_name string, last_name string, mrn string, zipcode integer, patient_status_code integer)");
       	statement.executeUpdate("create table hospital (id integer, name string, address string, city string, state string, zip string, type string, beds integer, county string, countyfips integer, country string, latitude float, longitude float, naics_code integer, website string, owner string, trauma string, helipad varchar(1))");
-      	statement.executeUpdate("create table alerts (zipcode integer)");
-	BufferedReader csvReader = new BufferedReader( new FileReader("src/main/java/cs505pubsubcep/CEP/hospitals.csv"));
+      	BufferedReader csvReader = new BufferedReader( new FileReader("src/main/java/cs505pubsubcep/CEP/hospitals.csv"));
 	csvReader.readLine(); //skip 1st row
 	String row;
 	while ((row = csvReader.readLine()) != null) {
@@ -71,8 +71,6 @@ public class DBEngine
 		System.out.println(queryString);
 		statement.executeUpdate(queryString);
 	}
-
-
 	//statement.executeUpdate("insert into person values(1, 'leo')");
       	//statement.executeUpdate("insert into person values(2, 'yui')");
       	/*ResultSet rs = statement.executeQuery("select * from person");
@@ -87,13 +85,35 @@ public class DBEngine
         }
      catch(Exception e)
     {
+      status = 0;
       // if the error message is "out of memory", 
       // it probably means no database file is found
       System.err.println(e.getMessage());
-      status = 0;
     }
-  return status; 	  
+    return status;
   }
+  public String[] getHospital(int id) {
+   String[] data = new String[3];
+   try {
+      	Statement statement = connection.createStatement();
+      	statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+      	ResultSet rs = statement.executeQuery("select beds, zip from hospital where hospital.id = " + Integer.toString(id));
+	while (rs.next()) {
+	data[0] = Integer.toString(rs.getInt("beds"));
+	data[1] = Integer.toString(-1); //placeholder until other APIs are done
+	data[2] = Integer.toString(rs.getInt("zip"));
+	}
+       }
+
+   catch(Exception e)
+       {
+	System.err.println(e.getMessage());
+       }
+   return data;
+  }
+
+
   public static void closeConnection(Connection connection) {
     try
     {

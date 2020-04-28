@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.String;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -237,7 +238,10 @@ public class API {
       String responseString = "{}";
       try {
          Map<String,String> responseMap = new HashMap<>();
- 	 responseMap.put("gethospital", String.valueOf(id));
+	 String[] data = Launcher.dbEngine.getHospital(id);
+ 	 responseMap.put("total_beds", data[0]);
+ 	 responseMap.put("available_beds", data[1]);
+ 	 responseMap.put("zipcode", data[2]);
 	 responseString = gson.toJson(responseMap);
 	 //return the deleted file status
 
