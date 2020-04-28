@@ -1,0 +1,15 @@
+@app:name('CEP')
+
+define stream pateints (first_name string, last_name string, mrn string, zipcode int, patient_status_code int);
+
+--something about a sink to set imputs and maybe outputs
+
+@info(name = 'alertQuery')
+from pateints#window.time(15 sec) as T
+  join pateints#window.time(30 sec) as R
+select T.zipcode as zipcode,
+  T.count() as num1
+  R.count() as num2
+group by zipcode
+having num1 >= 2*num2
+insert into OutputStream;
