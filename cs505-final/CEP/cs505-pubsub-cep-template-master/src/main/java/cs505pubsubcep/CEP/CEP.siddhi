@@ -11,5 +11,5 @@ select T.zipcode as zipcode,
   T.count() as num1
   R.count() as num2
 group by zipcode
-having num1 >= 2*num2
+having num1 >= 2*(num2-num1)
 insert into OutputStream;
