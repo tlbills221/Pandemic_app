@@ -37,13 +37,14 @@ public class DBEngine
 
 
   }
-  public void initDB() {
+  public int initDB() {
+      int status;
       try {
 	File file = new File("mydb.db");
         System.out.println(file.delete());
 	connection = DriverManager.getConnection("jdbc:sqlite:mydb.db");	
 	      
-      	int status = 0;
+      	status = 0;
       	Statement statement = connection.createStatement();
       	statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
@@ -69,7 +70,6 @@ public class DBEngine
 		String queryString = "insert into hospital values(" + data[0] + ",'" + data[1] + "','" + data[2] + "','" + data[3] + "','" + data[4] + "'," + data[5] + ",'" + data[6] + "'," + data[7] + ",'" + data[8] + "'," + data[9] + ",'" + data[10] + "'," + data[11] + "," + data[12] + "," + data[13] + ",'" + data[14] + "','" + data[15] + "','" + data[16] + "','" + data[17] + "')";
 		System.out.println(queryString);
 		statement.executeUpdate(queryString);
-
 	}
 
 
@@ -90,7 +90,9 @@ public class DBEngine
       // if the error message is "out of memory", 
       // it probably means no database file is found
       System.err.println(e.getMessage());
+      status = 0;
     }
+  return status; 	  
   }
   public static void closeConnection(Connection connection) {
     try
