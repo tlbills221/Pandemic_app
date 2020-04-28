@@ -50,7 +50,8 @@ public class DBEngine
       	//statement.executeUpdate("drop table if exists person");
       	statement.executeUpdate("create table patient (first_name string, last_name string, mrn string, zipcode integer, patient_status_code integer)"); //if we want to speed this up we do not need to store the patent name zipcode or patient_status_code as those are never asked for all we need is the location_code and the mrn
       	statement.executeUpdate("create table hospital (id integer, name string, address string, city string, state string, zip string, type string, beds integer, county string, countyfips integer, country string, latitude float, longitude float, naics_code integer, website string, owner string, trauma string, helipad varchar(1))");
-      	BufferedReader csvReader = new BufferedReader( new FileReader("src/main/java/cs505pubsubcep/CEP/hospitals.csv"));
+      	statement.executeUpdate("create table alerts (zipcode integer)");
+	BufferedReader csvReader = new BufferedReader( new FileReader("src/main/java/cs505pubsubcep/CEP/hospitals.csv"));
 	csvReader.readLine(); //skip 1st row
 	String row;
 	while ((row = csvReader.readLine()) != null) {
