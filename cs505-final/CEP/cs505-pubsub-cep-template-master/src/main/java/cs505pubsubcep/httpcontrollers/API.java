@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.String;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -146,8 +147,8 @@ public class API {
       String responseString = "{}";
       try {
          Map<String,String> responseMap = new HashMap<>();
-	 Launcher.dbEngine.initDB();
- 	 responseMap.put("delete and recreate SQLite file at path", "mydb.db");
+	 //Launcher.dbEngine.initDB();
+ 	 responseMap.put("reset_status_code", Integer.toString(Launcher.dbEngine.initDB()));
 	 responseString = gson.toJson(responseMap);
 	 //return the deleted file status
 
@@ -252,9 +253,16 @@ public class API {
 
 	 //return values of total_beds, available_beds, and zipcode
          Map<String,String> responseMap = new HashMap<>();
+<<<<<<< HEAD
  	 responseMap.put("zipcode", String.valueOf(zipcode));
 	 responseMap.put("available_beds", String.valueOf(available_beds));
 	 responseMap.put("total_beds", String.valueOf(total_beds));
+=======
+	 String[] data = Launcher.dbEngine.getHospital(id);
+ 	 responseMap.put("total_beds", data[0]);
+ 	 responseMap.put("available_beds", data[1]);
+ 	 responseMap.put("zipcode", data[2]);
+>>>>>>> 7abfed395e8857dd838745b62049b8348c955389
 	 responseString = gson.toJson(responseMap);
 
       } catch (Exception ex) {
