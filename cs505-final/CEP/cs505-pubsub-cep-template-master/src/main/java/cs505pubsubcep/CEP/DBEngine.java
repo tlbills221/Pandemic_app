@@ -41,8 +41,8 @@ public class DBEngine
   public int initDB() {
       int status;
       try {
-	File file = new File("mydb.db");
-        System.out.println(file.delete());
+	//File file = new File("mydb.db");
+        //System.out.println(file.delete());
 	connection = DriverManager.getConnection("jdbc:sqlite:mydb.db");	
 	      
       	status = 0;
@@ -50,27 +50,29 @@ public class DBEngine
       	statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
       	//statement.executeUpdate("drop table if exists person");
-      	statement.executeUpdate("create table patient (first_name string, last_name string, mrn string, zipcode integer, patient_status_code integer)");
-      	statement.executeUpdate("create table hospital (id integer, name string, address string, city string, state string, zip string, type string, beds integer, county string, countyfips integer, country string, latitude float, longitude float, naics_code integer, website string, owner string, trauma string, helipad varchar(1))");
-      	statement.executeUpdate("create table zipdistance (zip_from integer, zip_to integer, distance float)");
-      	statement.executeUpdate("create table alerts (zipcode integer)");
-	BufferedReader csvReader = new BufferedReader( new FileReader("src/main/java/cs505pubsubcep/CEP/hospitals.csv"));
+	statement.executeUpdate("drop table if exists patient");
+	statement.executeUpdate("drop table if exists alerts");
+      	statement.executeUpdate("create table if not exists patient (first_name string, last_name string, mrn string, zipcode integer, patient_status_code integer)");
+      	//statement.executeUpdate("create table hospital (id integer, name string, address string, city string, state string, zip string, type string, beds integer, county string, countyfips integer, country string, latitude float, longitude float, naics_code integer, website string, owner string, trauma string, helipad varchar(1))");
+      	//statement.executeUpdate("create table zipdistance (zip_from integer, zip_to integer, distance float)");
+      	statement.executeUpdate("create table if not exists alerts (zipcode integer)");
+	/*BufferedReader csvReader = new BufferedReader( new FileReader("src/main/java/cs505pubsubcep/CEP/hospitals.csv"));
 	csvReader.readLine(); //skip 1st row
 	String row;
 	while ((row = csvReader.readLine()) != null) {
 		row = row.replace("'", "");
 		String[] data = row.split(",");
-		System.out.println(data.length);
+		//System.out.println(data.length);
 		if (data.length > 18) { //if comma in address
 			data[2] = data[2] + " " +  data[3];
 			data[2] = data[2].replace("\"", "");
-			System.out.println(data[2]);
-			System.out.println(data[3]);
+			//System.out.println(data[2]);
+			//System.out.println(data[3]);
 			data = ArrayUtils.remove(data, 3);
 		}
 		data[2] = data[2].replace(",", " "); //Remove commas from address
 		String queryString = "insert into hospital values(" + data[0] + ",'" + data[1] + "','" + data[2] + "','" + data[3] + "','" + data[4] + "'," + data[5] + ",'" + data[6] + "'," + data[7] + ",'" + data[8] + "'," + data[9] + ",'" + data[10] + "'," + data[11] + "," + data[12] + "," + data[13] + ",'" + data[14] + "','" + data[15] + "','" + data[16] + "','" + data[17] + "')";
-		System.out.println(queryString);
+		//System.out.println(queryString);
 		statement.executeUpdate(queryString);
 	}
 
@@ -81,8 +83,9 @@ public class DBEngine
 	while((zipRow = zipReader.readLine()) != null){
 		String[] zipData = zipRow.split(",");
 		String queryString = "insert into zipdistance values(" + zipData[0] + "," + zipData[1] + "," + zipData[2] + ")";
+		System.out.println(queryString);
 		statement.executeUpdate(queryString);
-	}
+	}*/
        status = 1;
         }
      catch(Exception e)
