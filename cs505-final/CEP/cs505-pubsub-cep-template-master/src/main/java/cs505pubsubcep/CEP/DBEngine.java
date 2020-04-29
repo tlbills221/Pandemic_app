@@ -52,11 +52,12 @@ public class DBEngine
       	//statement.executeUpdate("drop table if exists person");
 	statement.executeUpdate("drop table if exists patient");
 	statement.executeUpdate("drop table if exists alerts");
-      	statement.executeUpdate("create table if not exists patient (first_name string, last_name string, mrn string, zipcode integer, patient_status_code integer)");
-      	//statement.executeUpdate("create table hospital (id integer, name string, address string, city string, state string, zip string, type string, beds integer, county string, countyfips integer, country string, latitude float, longitude float, naics_code integer, website string, owner string, trauma string, helipad varchar(1))");
+	statement.executeUpdate("drop table if exists hospital");
+      	statement.executeUpdate("create table patient (first_name string, last_name string, mrn string, zipcode integer, patient_status_code integer)");
+      	statement.executeUpdate("create table hospital (id integer, name string, address string, city string, state string, zip string, type string, beds integer, county string, countyfips integer, country string, latitude float, longitude float, naics_code integer, website string, owner string, trauma string, helipad varchar(1))");
       	//statement.executeUpdate("create table zipdistance (zip_from integer, zip_to integer, distance float)");
-      	statement.executeUpdate("create table if not exists alerts (zipcode integer)");
-	/*BufferedReader csvReader = new BufferedReader( new FileReader("src/main/java/cs505pubsubcep/CEP/hospitals.csv"));
+      	statement.executeUpdate("create table alerts (zipcode integer)");
+	BufferedReader csvReader = new BufferedReader( new FileReader("src/main/java/cs505pubsubcep/CEP/hospitals.csv"));
 	csvReader.readLine(); //skip 1st row
 	String row;
 	while ((row = csvReader.readLine()) != null) {
@@ -75,7 +76,9 @@ public class DBEngine
 		//System.out.println(queryString);
 		statement.executeUpdate(queryString);
 	}
-
+	statement.executeUpdate("alter table hospital add column available_beds integer");
+	statement.executeUpdate("update hospital set available_beds = beds");
+	/*
 	//reads the kyzipdistance into zipdistance table
 	BufferedReader zipReader = new BufferedReader(new FileReader("src/main/java/cs505pubsubcep/CEP/kyzipdistance.csv"));
 	zipReader.readLine(); //skip 1st row
