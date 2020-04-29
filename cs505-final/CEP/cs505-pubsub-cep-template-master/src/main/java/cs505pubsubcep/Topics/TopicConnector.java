@@ -2,12 +2,13 @@ package cs505pubsubcep.Topics;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonObject;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 import cs505pubsubcep.Launcher;
-
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,6 @@ public class TopicConnector {
             String username = "student";
             String password = "student01";
             String virtualhost = "patient_feed";
-
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(hostname);
             factory.setUsername(username);
@@ -56,8 +56,16 @@ public class TopicConnector {
                         delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
 
                 List<Map<String,String>> incomingList = gson.fromJson(message, typeOf); //This should control where the message is sent.
-                for(Map<String,String> map : incomingList) {
+                JsonParser parser = new JsonParser();
+		for(Map<String,String> map : incomingList) {
                     System.out.println("INPUT CEP EVENT: " +  map);
+		    JsonObject patient = parser.parse(gson.toJson(map)).getAsJsonObject();
+		    if ( patient.get("patient_status_code").getAsInt() == 2 || patient.get("patient_status_code").getAsInt() == 5 || patient.get("patient_status_code").getAsInt() == 6) {
+		    	Launcher.dbEngine.posCount++;
+		    }	    
+		    else if (patient.get("patient_status_code").getAsInt() == 1 || patient.get("patient_status_code").getAsInt() == 4) {
+		    	Launcher.dbEngine.negCount++;
+		    } 
                     Launcher.cepEngine.input(Launcher.inputStreamName, gson.toJson(map));
                 }
                 System.out.println("");

@@ -18,7 +18,8 @@ public class DBEngine
 
   
   private Connection connection;
-  
+  public int posCount = 0;
+  public int negCount = 0; 
   public DBEngine()
   {
     // load the sqlite-JDBC driver using the current class loader
@@ -49,7 +50,8 @@ public class DBEngine
       	Statement statement = connection.createStatement();
       	statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-      	//statement.executeUpdate("drop table if exists person");
+      	posCount = 0;
+	negCount = 0;
 	statement.executeUpdate("drop table if exists patient");
 	statement.executeUpdate("drop table if exists alerts");
 	statement.executeUpdate("drop table if exists hospital");
@@ -192,10 +194,10 @@ public class DBEngine
       	Statement statement = connection.createStatement();
       	statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-      	ResultSet rs = statement.executeQuery("select beds, zip from hospital where hospital.id = " + Integer.toString(id));
+      	ResultSet rs = statement.executeQuery("select beds, zip, available_beds from hospital where hospital.id = " + Integer.toString(id));
 	while (rs.next()) {
 	data[0] = Integer.toString(rs.getInt("beds"));
-	data[1] = Integer.toString(-1); //placeholder until other APIs are done
+	data[1] = Integer.toString(rs.getInt("available_beds"));
 	data[2] = Integer.toString(rs.getInt("zip"));
 	}
        }

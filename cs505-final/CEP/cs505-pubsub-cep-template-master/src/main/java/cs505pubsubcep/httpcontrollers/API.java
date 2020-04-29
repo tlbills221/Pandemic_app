@@ -277,7 +277,8 @@ public class API {
       String responseString = "{}";
       try {
          Map<String,String> responseMap = new HashMap<>();
- 	 responseMap.put("testcount", "null");
+ 	 responseMap.put("positive_test", Integer.toString(Launcher.dbEngine.posCount));
+	 responseMap.put("negative_test", Integer.toString(Launcher.dbEngine.negCount));
 	 responseString = gson.toJson(responseMap);
 	 //return the deleted file status
 
