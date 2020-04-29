@@ -52,6 +52,21 @@ public class Launcher {
         //END MODIFY
 
         cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);
+	    
+	String outputStreamName = "countStream";
+        String outputStreamAttributesString = "zip_code string, count long";
+
+
+        String queryString = "from pateints#window.timeBatch(15 sec) as T "+
+				"join pateints#window.timeBatch(30 sec) as R "+
+				"select T.zipcode as zipcode, T.count() as num1, R.count() as num2 "+
+				"group by zipcode "+
+				"having num1 >= 2*(num2-num1) "+
+				"insert into countStream;";
+
+        //END MODIFY
+
+        cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);
 	
         System.out.println("CEP Started...");
  
