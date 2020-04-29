@@ -52,11 +52,8 @@ public class DBEngine
       	//statement.executeUpdate("drop table if exists person");
       	statement.executeUpdate("create table patient (first_name string, last_name string, mrn string, zipcode integer, patient_status_code integer)");
       	statement.executeUpdate("create table hospital (id integer, name string, address string, city string, state string, zip string, type string, beds integer, county string, countyfips integer, country string, latitude float, longitude float, naics_code integer, website string, owner string, trauma string, helipad varchar(1))");
-<<<<<<< HEAD
       	statement.executeUpdate("create table zipdistance (zip_from integer, zip_to integer, distance float)");
-=======
       	statement.executeUpdate("create table alerts (zipcode integer)");
->>>>>>> 7abfed395e8857dd838745b62049b8348c955389
 	BufferedReader csvReader = new BufferedReader( new FileReader("src/main/java/cs505pubsubcep/CEP/hospitals.csv"));
 	csvReader.readLine(); //skip 1st row
 	String row;
@@ -76,7 +73,6 @@ public class DBEngine
 		System.out.println(queryString);
 		statement.executeUpdate(queryString);
 	}
-<<<<<<< HEAD
 
 	//reads the kyzipdistance into zipdistance table
 	BufferedReader zipReader = new BufferedReader(new FileReader("src/main/java/cs505pubsubcep/CEP/kyzipdistance.csv"));
@@ -88,8 +84,6 @@ public class DBEngine
 		statement.executeUpdate(queryString);
 	}
 
-=======
->>>>>>> 7abfed395e8857dd838745b62049b8348c955389
 	//statement.executeUpdate("insert into person values(1, 'leo')");
       	//statement.executeUpdate("insert into person values(2, 'yui')");
       	/*ResultSet rs = statement.executeQuery("select * from person");
@@ -111,7 +105,6 @@ public class DBEngine
     }
     return status;
   }
-<<<<<<< HEAD
 
 
   //FINDNEARESTHOSPITAL FUNCTION FOR OF1 AND OF2, TAKES A ZIPCODE AND A BOOLEAN STATING WHETHER
@@ -121,6 +114,7 @@ public class DBEngine
 	try{
 	   int hospital_id = -1000;
 	   boolean found = false;
+	   connection = DriverManager.getConnection("jdbc:sqlite:mydb.db");
 	   Statement statement = connection.createStatement();
 	   statement.setQueryTimeout(30);
 
@@ -157,32 +151,36 @@ public class DBEngine
   public int getPatientLocation(String mrn){
 	try{
 	   //initialize variables
-           String status_code = "-1";
-	   String zipcode = "-1";
+           int status_code = -1;
+	   String zipcode = "00000";
 	   int location_code = -1;
+	   connection = DriverManager.getConnection("jdbc:sqlite:mydb.db");
 	   Statement statement = connection.createStatement();
-	   statement.setQueryTimeout(30);
 
 	   //search for patient's status code and zipcode with given mrn
-	   ResultSet rs = statement.executeQuery("select patient_status_code,zipcode from patient where mrn='" + mrn + "'");
+	   ResultSet rs = statement.executeQuery("select patient_status_code,zipcode from patient where mrn = \"" + mrn + "\"");
 	   while(rs.next()){
-	   	status_code = rs.getString("patient_status_code");
-	   	zipcode = rs.getString("zipcode");
+	   	status_code = rs.getInt("patient_status_code");
+	   	zipcode = Integer.toString(rs.getInt("zipcode"));
 	   }
 
 	   //convert status code to a location code - home=0, no assignment=-1, else call function to get id of nearest qualified hospital
-	  if(status_code.equals("0") || status_code.equals("1") || status_code.equals("2") || status_code.equals("4")){
-	        location_code = 0;
-	  }
-	  else if(status_code.equals("3") || status_code.equals("5")){
-		location_code = findNearestHospital(zipcode, false); //no need for level IV
-	  }
-	  else if(status_code.equals("6")){
-		location_code = findNearestHospital(zipcode, true); //search only level IV
-	  }
-	  else{
-		location_code = -11;
-	  }
+	   switch(status_code){
+		case 0:
+		case 1:
+		case 2:
+		case 4:
+			location_code = 0;
+			break;
+		case 3:
+		case 5:
+			location_code = findNearestHospital(zipcode, false); //no need for level IV+
+			break;
+		case 6:
+			location_code = findNearestHospital(zipcode, true); //search for only level IV+
+		default:
+			location_code = -11;
+	   }
 	   
 	   //return location_code value
 	   return location_code;
@@ -193,7 +191,6 @@ public class DBEngine
 	}
   }
 
-=======
   public String[] getHospital(int id) {
    String[] data = new String[3];
    try {
@@ -216,7 +213,6 @@ public class DBEngine
   }
 
 
->>>>>>> 7abfed395e8857dd838745b62049b8348c955389
   public static void closeConnection(Connection connection) {
     try
     {

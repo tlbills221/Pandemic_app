@@ -253,16 +253,10 @@ public class API {
 
 	 //return values of total_beds, available_beds, and zipcode
          Map<String,String> responseMap = new HashMap<>();
-<<<<<<< HEAD
- 	 responseMap.put("zipcode", String.valueOf(zipcode));
-	 responseMap.put("available_beds", String.valueOf(available_beds));
-	 responseMap.put("total_beds", String.valueOf(total_beds));
-=======
 	 String[] data = Launcher.dbEngine.getHospital(id);
  	 responseMap.put("total_beds", data[0]);
  	 responseMap.put("available_beds", data[1]);
  	 responseMap.put("zipcode", data[2]);
->>>>>>> 7abfed395e8857dd838745b62049b8348c955389
 	 responseString = gson.toJson(responseMap);
 
       } catch (Exception ex) {
