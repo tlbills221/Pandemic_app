@@ -50,7 +50,8 @@ public class DBEngine
       	//statement.executeUpdate("drop table if exists person");
       	statement.executeUpdate("create table patient (first_name string, last_name string, mrn string, zipcode integer, patient_status_code integer)");
       	statement.executeUpdate("create table hospital (id integer, name string, address string, city string, state string, zip string, type string, beds integer, county string, countyfips integer, country string, latitude float, longitude float, naics_code integer, website string, owner string, trauma string, helipad varchar(1))");
-      	BufferedReader csvReader = new BufferedReader( new FileReader("src/main/java/cs505pubsubcep/CEP/hospitals.csv"));
+      	statement.executeUpdate("create table zipdistance (zip_from integer, zip_to integer, distance float)");
+	BufferedReader csvReader = new BufferedReader( new FileReader("src/main/java/cs505pubsubcep/CEP/hospitals.csv"));
 	csvReader.readLine(); //skip 1st row
 	String row;
 	while ((row = csvReader.readLine()) != null) {
@@ -71,6 +72,15 @@ public class DBEngine
 
 	}
 
+	//reads the kyzipdistance into zipdistance table
+	BufferedReader zipReader = new BufferedReader(new FileReader("src/main/java/cs505pubsubcep/CEP/kyzipdistance.csv"));
+	zipReader.readLine(); //skip 1st row
+	String zipRow;
+	while((zipRow = zipReader.readLine()) != null){
+		String[] zipData = zipRow.split(",");
+		String queryString = "insert into zipdistance values(" + zipData[0] + "," + zipData[1] + "," + zipData[2] + ")";
+		statement.executeUpdate(queryString);
+	}
 
 	//statement.executeUpdate("insert into person values(1, 'leo')");
       	//statement.executeUpdate("insert into person values(2, 'yui')");
@@ -91,6 +101,87 @@ public class DBEngine
       System.err.println(e.getMessage());
     }
   }
+
+
+  //FINDNEARESTHOSPITAL FUNCTION FOR OF1 AND OF2, TAKES A ZIPCODE AND A BOOLEAN STATING WHETHER
+  //OR NOT THE PATIENT REQURES A LEVEL IV OR BETTER TREATMENT FACILITY, RETURNS ID OF  NEAREST
+  //QUALIFIED HOSPITAL
+  public int findNearestHospital(String zipcode, boolean needsIV){
+	try{
+	   int hospital_id = -1000;
+	   boolean found = false;
+	   Statement statement = connection.createStatement();
+	   statement.setQueryTimeout(30);
+
+	   ResultSet rs1 = statement.executeQuery("select zip_to from zipdistance where zip_from=" + zipcode);
+	   while(rs1.next() && found == false){
+		String zip_to = rs1.getString("zip_to");
+		ResultSet rs2 = statement.executeQuery("select id,trauma from hospital where zip=" + zip_to);
+		if(rs2.next()){
+			String id = rs2.getString("id");
+			String trauma = rs2.getString("trauma");
+			if(needsIV == true){
+				if(trauma.equals("LEVEL IV")){
+					hospital_id = Integer.valueOf(id);
+					found = true;
+				}
+			}
+			else{
+				hospital_id = Integer.valueOf(id);
+				found = true;
+			}
+		}
+	   }
+
+	   return hospital_id;
+	}
+	catch(Exception e){
+	   System.err.println(e.getMessage());
+	   return -111;
+	}
+  }
+
+
+  //GETPATIENTLOCATION FUNCTION FOR OF2, TAKES A PATIENT'S MRN AND RETURNS THE ID OF THEIR LOCATION
+  public int getPatientLocation(String mrn){
+	try{
+	   //initialize variables
+           String status_code = "-1";
+	   String zipcode = "-1";
+	   int location_code = -1;
+	   Statement statement = connection.createStatement();
+	   statement.setQueryTimeout(30);
+
+	   //search for patient's status code and zipcode with given mrn
+	   ResultSet rs = statement.executeQuery("select patient_status_code,zipcode from patient where mrn='" + mrn + "'");
+	   while(rs.next()){
+	   	status_code = rs.getString("patient_status_code");
+	   	zipcode = rs.getString("zipcode");
+	   }
+
+	   //convert status code to a location code - home=0, no assignment=-1, else call function to get id of nearest qualified hospital
+	  if(status_code.equals("0") || status_code.equals("1") || status_code.equals("2") || status_code.equals("4")){
+	        location_code = 0;
+	  }
+	  else if(status_code.equals("3") || status_code.equals("5")){
+		location_code = findNearestHospital(zipcode, false); //no need for level IV
+	  }
+	  else if(status_code.equals("6")){
+		location_code = findNearestHospital(zipcode, true); //search only level IV
+	  }
+	  else{
+		location_code = -11;
+	  }
+	   
+	   //return location_code value
+	   return location_code;
+	}
+	catch(Exception e){
+	   System.err.println(e.getMessage());
+	   return -100;
+	}
+  }
+
   public static void closeConnection(Connection connection) {
     try
     {

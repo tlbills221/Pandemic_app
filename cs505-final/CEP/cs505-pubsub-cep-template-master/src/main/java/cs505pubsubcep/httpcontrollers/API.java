@@ -211,13 +211,20 @@ public class API {
    @GET
    @Path("/getpatient/{mrn}")
    @Produces(MediaType.APPLICATION_JSON)
-   public Response getPatient(@HeaderParam("X-Auth-API-Key") String authKey, @PathParam("mrn") int mrn) {
+   public Response getPatient(@HeaderParam("X-Auth-API-Key") String authKey, @PathParam("mrn") String mrn) {
+      //initialize all variables
       String responseString = "{}";
+      int location_code = -1;
+
       try {
+	 //use getPatientLocation to find patient's location by mrn
+	 location_code = Launcher.dbEngine.getPatientLocation(mrn);
+
+	 //return values of mrn and location_code     
          Map<String,String> responseMap = new HashMap<>();
- 	 responseMap.put("getpatient", String.valueOf(mrn));
+	 responseMap.put("location_code", String.valueOf(location_code));
+	 responseMap.put("mrn", mrn);
 	 responseString = gson.toJson(responseMap);
-	 //return the deleted file status
 
       } catch (Exception ex) {
          StringWriter sw = new StringWriter();
@@ -234,12 +241,21 @@ public class API {
    @Path("/gethospital/{id}")
    @Produces(MediaType.APPLICATION_JSON)
    public Response getHospital(@HeaderParam("X-Auth-API-Key") String authKey, @PathParam("id") int id) {
+      //initialize all variables
       String responseString = "{}";
+      int total_beds = 0;
+      int available_beds = 0;
+      String zipcode = "";
+
       try {
+	 //search for information based on id given
+
+	 //return values of total_beds, available_beds, and zipcode
          Map<String,String> responseMap = new HashMap<>();
- 	 responseMap.put("gethospital", String.valueOf(id));
+ 	 responseMap.put("zipcode", String.valueOf(zipcode));
+	 responseMap.put("available_beds", String.valueOf(available_beds));
+	 responseMap.put("total_beds", String.valueOf(total_beds));
 	 responseString = gson.toJson(responseMap);
-	 //return the deleted file status
 
       } catch (Exception ex) {
          StringWriter sw = new StringWriter();
