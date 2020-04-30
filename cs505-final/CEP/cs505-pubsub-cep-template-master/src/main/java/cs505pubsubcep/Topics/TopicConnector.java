@@ -13,7 +13,6 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-
 public class TopicConnector {
 
     private Gson gson;
@@ -60,6 +59,7 @@ public class TopicConnector {
 		for(Map<String,String> map : incomingList) {
                     System.out.println("INPUT CEP EVENT: " +  map);
 		    JsonObject patient = parser.parse(gson.toJson(map)).getAsJsonObject();
+		    Launcher.dbEngine.insertPatient(patient);
 		    if ( patient.get("patient_status_code").getAsInt() == 2 || patient.get("patient_status_code").getAsInt() == 5 || patient.get("patient_status_code").getAsInt() == 6) {
 		    	Launcher.dbEngine.posCount++;
 		    }	    

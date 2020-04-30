@@ -1,10 +1,6 @@
 package cs505pubsubcep.CEP;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.google.gson.JsonObject;
 import java.lang.ClassNotFoundException;
 import java.io.File;
 import java.io.FileReader;
@@ -13,6 +9,12 @@ import java.lang.String;
 import java.lang.Integer;
 import java.util.Arrays;
 import org.apache.commons.lang3.ArrayUtils;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class DBEngine
 {
 
@@ -111,7 +113,6 @@ public class DBEngine
 	try{
 	   int hospital_id = -1000;
 	   boolean found = false;
-	   connection = DriverManager.getConnection("jdbc:sqlite:mydb.db");
 	   Statement statement = connection.createStatement();
 	   statement.setQueryTimeout(30);
 
@@ -209,6 +210,21 @@ public class DBEngine
    return data;
   }
 
+  public void insertPatient(JsonObject patient) {
+   try
+   {
+	Statement statement = connection.createStatement();
+	statement.setQueryTimeout(30);
+	statement.executeUpdate("insert into patient values('" + patient.get("first_name").getAsString() + "','" + patient.get("last_name").getAsString() + "','" + patient.get("mrn").getAsString() + "'," + patient.get("zip_code").getAsInt() + "," +  patient.get("patient_status_code").getAsInt() + ")");
+   }
+
+   catch(Exception e) 
+   {
+	   System.out.println("uh oh...");
+	   System.err.println(e.getMessage());
+   }
+
+  }
 
   public static void closeConnection(Connection connection) {
     try

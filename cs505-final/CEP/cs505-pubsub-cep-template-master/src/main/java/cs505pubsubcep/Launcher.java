@@ -36,10 +36,10 @@ public class Launcher {
 
 
         //START MODIFY
-        inputStreamName = "PatientInStream";
+        //inputStreamName = "PatientInStream";
         String inputStreamAttributesString = "first_name string, last_name string, mrn string, zip_code string, patient_status_code string";
 
-        String outputStreamName = "PatientOutStream";
+        /*String outputStreamName = "PatientOutStream";
         String outputStreamAttributesString = "patient_status_code string, count long";
 
 
@@ -50,9 +50,9 @@ public class Launcher {
                 "insert into PatientOutStream; ";
 
         //END MODIFY
-
-        cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);
-	    
+*/
+        //cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);
+	   
 	String outputStreamName = "countStream";
         String outputStreamAttributesString = "zip_code string, count long";
 
