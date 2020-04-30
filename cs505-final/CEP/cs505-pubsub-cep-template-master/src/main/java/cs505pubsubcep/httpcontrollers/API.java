@@ -171,7 +171,7 @@ public class API {
       String responseString = "{}";
       try {
          Map<String,String> responseMap = new HashMap<>();
- 	 responseMap.put("ziplist", String.valueOf(Launcher.alerts));
+ 	 responseMap.put("ziplist", alerts);
 	 responseString = gson.toJson(responseMap);
 	 //return the deleted file status
 
