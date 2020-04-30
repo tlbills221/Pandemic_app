@@ -18,7 +18,7 @@ public class Launcher {
     public static final String API_SERVICE_KEY = "12140362"; //Change this to your student id
     public static final int WEB_PORT = 8088;
     public static String inputStreamName = null;
-    public static long count = -1;
+    public static long accessCount = -1;
 
     public static TopicConnector topicConnector;
 
