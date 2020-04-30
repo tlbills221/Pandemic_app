@@ -18,7 +18,7 @@ public class Launcher {
     public static final String API_SERVICE_KEY = "12140362"; //Change this to your student id
     public static final int WEB_PORT = 8088;
     public static String inputStreamName = null;
-    public static long accessCount = -1;
+    public static long count = -1;
 
     public static TopicConnector topicConnector;
 
@@ -36,7 +36,7 @@ public class Launcher {
 
 
         //START MODIFY
-        //inputStreamName = "PatientInStream";
+        inputStreamName = "PatientInStream";
         String inputStreamAttributesString = "first_name string, last_name string, mrn string, zip_code string, patient_status_code string";
 
         /*String outputStreamName = "PatientOutStream";
@@ -57,8 +57,8 @@ public class Launcher {
         String outputStreamAttributesString = "zip_code string, count long";
 
 
-        String queryString = "from pateints#window.timeBatch(15 sec) as T "+
-				"join pateints#window.timeBatch(30 sec) as R "+
+        String queryString = "from pateintInStream#window.timeBatch(15 sec) as T "+
+				"join pateintInStream#window.timeBatch(30 sec) as R "+
 				"select T.zipcode as zipcode, T.count() as num1, R.count() as num2 "+
 				"group by zipcode "+
 				"having num1 >= 2*(num2-num1) "+
