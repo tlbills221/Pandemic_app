@@ -109,28 +109,28 @@ public class DBEngine
   //FINDNEARESTHOSPITAL FUNCTION FOR OF1 AND OF2, TAKES A ZIPCODE AND A BOOLEAN STATING WHETHER
   //OR NOT THE PATIENT REQURES A LEVEL IV OR BETTER TREATMENT FACILITY, RETURNS ID OF  NEAREST
   //QUALIFIED HOSPITAL
-  public int findNearestHospital(String zipcode, boolean needsIV){
+  public int findNearestHospital(int zipcode, boolean needsIV){
 	try{
 	   int hospital_id = -1000;
 	   boolean found = false;
 	   Statement statement = connection.createStatement();
 	   statement.setQueryTimeout(30);
 
-	   ResultSet rs1 = statement.executeQuery("select zip_to from zipdistance where zip_from=" + zipcode);
+	   ResultSet rs1 = statement.executeQuery("select zip_to from zipdistance where zip_from= " + zipcode);
 	   while(rs1.next() && found == false){
-		String zip_to = rs1.getString("zip_to");
-		ResultSet rs2 = statement.executeQuery("select id,trauma from hospital where zip=" + zip_to);
+		int zip_to = rs1.getInt("zip_to");
+		ResultSet rs2 = statement.executeQuery("select id,trauma from hospital where zip= " + zip_to);
 		if(rs2.next()){
-			String id = rs2.getString("id");
+			int id = rs2.getInt("id");
 			String trauma = rs2.getString("trauma");
 			if(needsIV == true){
 				if(trauma.equals("LEVEL IV")){
-					hospital_id = Integer.valueOf(id);
+					hospital_id = id;
 					found = true;
 				}
 			}
 			else{
-				hospital_id = Integer.valueOf(id);
+				hospital_id = id;
 				found = true;
 			}
 		}
@@ -140,7 +140,7 @@ public class DBEngine
 	}
 	catch(Exception e){
 	   System.err.println(e.getMessage());
-	   return -111;
+	   return -101;
 	}
   }
 
@@ -150,16 +150,16 @@ public class DBEngine
 	try{
 	   //initialize variables
            int status_code = -1;
-	   String zipcode = "00000";
+	   int zipcode = 0;
 	   int location_code = -1;
-	   connection = DriverManager.getConnection("jdbc:sqlite:mydb.db");
 	   Statement statement = connection.createStatement();
+	   statement.setQueryTimeout(30);
 
 	   //search for patient's status code and zipcode with given mrn
 	   ResultSet rs = statement.executeQuery("select patient_status_code,zipcode from patient where mrn = \"" + mrn + "\"");
 	   while(rs.next()){
 	   	status_code = rs.getInt("patient_status_code");
-	   	zipcode = Integer.toString(rs.getInt("zipcode"));
+	   	zipcode = rs.getInt("zipcode");
 	   }
 
 	   //convert status code to a location code - home=0, no assignment=-1, else call function to get id of nearest qualified hospital
@@ -176,8 +176,9 @@ public class DBEngine
 			break;
 		case 6:
 			location_code = findNearestHospital(zipcode, true); //search for only level IV+
+			break;
 		default:
-			location_code = -11;
+			location_code = -1;
 	   }
 	   
 	   //return location_code value
