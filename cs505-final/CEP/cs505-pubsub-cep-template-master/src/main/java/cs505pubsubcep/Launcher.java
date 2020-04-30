@@ -19,7 +19,7 @@ public class Launcher {
     public static final int WEB_PORT = 8088;
     public static String inputStreamName = null;
     public static long accessCount = -1;
-    public static List<String> alerts = new ArrayList<String>();
+    public static String alerts = "";
 
     public static TopicConnector topicConnector;
 
