@@ -16,9 +16,9 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
         try {
             System.out.println("OUTPUT CEP EVENT: " + msg);
             System.out.println("");
-            //String[] sstr = String.valueOf(msg).split(":");
-            //String[] outval = sstr[2].split("}");
-            //Launcher.accessCount = Long.parseLong(outval[0]);
+            String[] sstr = String.valueOf(msg).split(":");
+            String[] outval = sstr[2].split("}");
+            Launcher.alerts = outval[0];
 
         } catch(Exception ex) {
             ex.printStackTrace();
