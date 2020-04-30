@@ -171,7 +171,7 @@ public class API {
       String responseString = "{}";
       try {
          Map<String,String> responseMap = new HashMap<>();
- 	 responseMap.put("ziplist", alerts);
+ 	 responseMap.put("ziplist", Launcher.alerts);
 	 responseString = gson.toJson(responseMap);
 	 //return the deleted file status
 
@@ -193,7 +193,7 @@ public class API {
    public Response alertList(@HeaderParam("X-Auth-API-Key") String authKey) {
       String responseString = "{}";
       try {
-	 int res = (Launcher.alerts.size() >= 5)? 1: 0;
+	 int res = (Launcher.alerts.split(",").size() >= 5)? 1: 0;
          Map<String,String> responseMap = new HashMap<>();
  	 responseMap.put("state_status", String.valueOf(res));
 	 responseString = gson.toJson(responseMap);
