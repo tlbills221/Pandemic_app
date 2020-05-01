@@ -67,9 +67,11 @@ public class CEPEngine {
             siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(sourceString + " " + sinkString + " " + queryString);
 
             InMemoryBroker.Subscriber subscriberTest = new OutputSubscriber(outputTopic,outputStreamName);
+            InMemoryBroker.Subscriber subscriberTest2 = new InputSubscriber(inputTopic,inputStreamName);
 
             //subscribe to "inMemory" broker per topic
             InMemoryBroker.subscribe(subscriberTest);
+            InMemoryBroker.subscribe(subscriberTest2);
 
             //Starting event processing
             siddhiAppRuntime.start();
