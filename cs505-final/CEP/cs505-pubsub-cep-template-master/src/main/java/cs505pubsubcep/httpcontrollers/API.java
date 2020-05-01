@@ -125,8 +125,8 @@ public class API {
       try {
          Map<String,String> responseMap = new HashMap<>();
  	 responseMap.put("team_name", "Umbrella Corporation");
-	 responseMap.put("team_member_sids", "12140362");
-	 responseMap.put("app_status_code", "0");
+	 responseMap.put("team_member_sids", "12140362, 12145992, 12145808");
+	 responseMap.put("app_status_code", "1");
 	 responseString = gson.toJson(responseMap);
 	 //return the requested team info
       } catch (Exception ex) {
@@ -193,7 +193,7 @@ public class API {
    public Response alertList(@HeaderParam("X-Auth-API-Key") String authKey) {
       String responseString = "{}";
       try {
-	 int res = (Launcher.alerts.split(",").size() >= 5)? 1: 0;
+	 int res = (Launcher.alerts.split(",").length >= 5)? 1: 0;
          Map<String,String> responseMap = new HashMap<>();
  	 responseMap.put("state_status", String.valueOf(res));
 	 responseString = gson.toJson(responseMap);
