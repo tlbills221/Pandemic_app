@@ -30,7 +30,7 @@ public class DBEngine
     {
       Class.forName("org.sqlite.JDBC");
       // create a database connection
-      connection = DriverManager.getConnection("jdbc:sqlite:mydb.db");
+      connection = DriverManager.getConnection("jdbc:sqlite:i/database/mydb.db");
     }
     catch(SQLException | ClassNotFoundException e)
     {
@@ -46,7 +46,7 @@ public class DBEngine
       try {
 	//File file = new File("mydb.db");
         //System.out.println(file.delete());
-	connection = DriverManager.getConnection("jdbc:sqlite:mydb.db");	
+	connection = DriverManager.getConnection("jdbc:sqlite:/database/mydb.db");	
 	      
       	status = 0;
       	Statement statement = connection.createStatement();
@@ -61,7 +61,7 @@ public class DBEngine
       	statement.executeUpdate("create table hospital (id integer, name string, address string, city string, state string, zip string, type string, beds integer, county string, countyfips integer, country string, latitude float, longitude float, naics_code integer, website string, owner string, trauma string, helipad varchar(1))");
       	//statement.executeUpdate("create table zipdistance (zip_from integer, zip_to integer, distance float)");
       	statement.executeUpdate("create table alerts (zipcode integer)");
-	BufferedReader csvReader = new BufferedReader( new FileReader("src/main/java/cs505pubsubcep/CEP/hospitals.csv"));
+	BufferedReader csvReader = new BufferedReader( new FileReader("/database/CEP/hospitals.csv"));
 	csvReader.readLine(); //skip 1st row
 	String row;
 	while ((row = csvReader.readLine()) != null) {
